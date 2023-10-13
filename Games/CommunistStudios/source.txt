@@ -1,0 +1,10 @@
+https://www.w3schools.com/css/css_align.asp#:~:text=To%20center%20both%20vertically%20and,am%20vertically%20and%20horizontally%20centered. 
+https://www.w3schools.com/css/css3_borders.asp
+https://www.w3schools.com/tags/tag_hr.asp
+https://www.brainyquote.com/quotes/karl_marx_382655
+https://www.brainyquote.com/quotes/karl_marx_166028
+https://blog.hubspot.com/website/how-to-indent-css#:~:text=Just%20use%20the%20CSS%20type,the%20first%20line%20by%20default.
+https://devpractical.com/display-html-tags-as-plain-text/#:~:text=You%20can%20show%20HTML%20tags,you%20want%20to%20be%20visible.
+https://devpractical.com/html-tags-to-entities-converter/
+
+

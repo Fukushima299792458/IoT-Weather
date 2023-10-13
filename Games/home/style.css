@@ -1,0 +1,13 @@
+* {
+  /* set all margins and borders to zero to fill the screen */
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+body {
+  /* set style parameters for the body like background colour, width and height*/
+  background-color: rgb(253, 166, 0);
+  width: 100%;
+  height: 100%;
+}
