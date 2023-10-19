@@ -1,5 +1,7 @@
 # Wireless Security Alarm
 
+## Hardware and Wiring
+![IMG_4801](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/8d4f013f-bea6-4465-b910-f30d38808d28)
 
 
 ## UI
@@ -7,13 +9,17 @@
 Sensors display sensor data every 10 seconds as specified in the [sensors](https://github.com/Fukushima299792458/IoT-Weather/edit/main/README.md#sensors) section
 Transducers can be set to automatically change with the Virtual Alarm which can be in turn set to automatically change according to the sensor inputs. Alternatively, they can be controlled manually as in the [Transducers](https://github.com/Fukushima299792458/IoT-Weather/edit/main/README.md#transducers) section. 
 
-### Sensors
-#### UltraSonic Sensor
+## Sensors
+### IR Motion Sensor
+The Infrared motion sensor detects motion by detecting a change in the infrared signature of its detection field i.e. it sees warm objects using IR and then detects when they change position.
+(White dome)
 
+### UltraSonic Sensor
+The Ultrasonic distance sensor sends out a pulse
 ![image](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/fa0f9c99-21d5-441e-938c-dc867a74a01c)
 Note: 1 microsecond equivalent to 0.343 mm of sound travel time! That's 343 µm!! A total precision of ±1.372mm between 10s averages!!! However, < 1cm between individual measurements...
 
-### Transducers
+## Transducers
 
 
 
