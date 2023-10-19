@@ -3,11 +3,18 @@
 
 
 ## UI
+![image](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/7fd9b3ad-588a-45cd-a63b-b281a4c887b7)
+Sensors display sensor data every 10 seconds as specified in the [sensors](https://github.com/Fukushima299792458/IoT-Weather/edit/main/README.md#sensors) section
+Transducers can be set to automatically change with the Virtual Alarm which can be in turn set to automatically change according to the sensor inputs. Alternatively, they can be controlled manually as in the [Transducers](https://github.com/Fukushima299792458/IoT-Weather/edit/main/README.md#transducers) section. 
 
-### UltraSonic Sensor
+### Sensors
+#### UltraSonic Sensor
 
 ![image](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/fa0f9c99-21d5-441e-938c-dc867a74a01c)
 Note: 1 microsecond equivalent to 0.343 mm of sound travel time! That's 343 µm!! A total precision of ±1.372mm between 10s averages!!! However, < 1cm between individual measurements...
+
+### Transducers
+
 
 
 ## an IoT project
