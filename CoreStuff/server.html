@@ -23,7 +23,17 @@
           </tr>
           <tr>
             <td>Movement</td>
-            <td>Unknown</td>
+            <td id="movement">Unknown</td>
+            <td>Input Only</td>
+          </tr>
+          <tr>
+            <td>Average Distance Change(UltraSonic)</td>
+            <td id="distance">No reference measurements</td>
+            <td>Input Only</td>
+          </tr>
+          <tr>
+            <td>Fast Distance Change(UltraSonic)</td>
+            <td id="ColdMovement">Unknown</td>
             <td>Input Only</td>
           </tr>
           <tr>
@@ -74,8 +84,8 @@
         </table>
       </aside>
       <article>
-        <h2>The Best IoT Weather App</h2>
-        <img src="/CoreStuff/public/assets/yellow-umbrella.png" alt="article banner"  loading="lazy" />
+        <!-- <h2>The Best IoT Weather App</h2> -->
+        <img src="/CoreStuff/public/assets/stealing.jpg" id="stealing" loading="lazy" />
       </article>
       <footer>
         <p>Copyright 2023 ObjectivistApe</p>
@@ -103,13 +113,23 @@
           document.getElementById('VAActive').disabled = data.VAAuto;
           return;
         }
+        
         // called += 1;
         // if (called >= 1) {
         //   return;
         // }
         // try {
+        clearTimeout(alarm.t);
+        clearInterval(alarm.i);
         fetch(`/data`).then((response) => response.json()).then((response) => {
           data.movement = response.variables.movement;
+          data.distance = Math.abs(data.time - response.variables.Average)*0.01715;
+          data.time = response.variables.Average;
+          data.ColdMovement = response.variables.ColdMovement;
+          console.log(response.variables.Average, response.variables.Average*0.01715);
+          document.getElementById("movement").innerHTML = data.movement;
+          document.getElementById("distance").innerHTML = data.distance + " cm";
+          document.getElementById("ColdMovement").innerHTML = data.ColdMovement;
           // console.log(data.movement);
           // await fetch("../").then((response) => response.json()).then((response) => {data = response.variables;});
           document.getElementById('BuzzerStatus').innerHTML = `${(data.BuzzerStatus) ? 'A' : 'Ina'}ctive`;
@@ -125,16 +145,24 @@
           // document.getElementById('InbuiltBrightness').value = data.InbuiltBrightness;
           document.getElementById('VAActive').innerHTML = `${((data.VAAuto && data.movement) || (!data.VAAuto && data.VAActive)) ? 'A' : 'Ina'}ctive`;
           document.getElementById('VAActive').disabled = data.VAAuto;
-          clearTimeout(alarm.t);
-          clearInterval(alarm.i);
+          document.getElementById('stealing').src = "/CoreStuff/public/assets/stealing.jpg";
           if (data.movement) {
             document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
             document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
             alarm.t = setTimeout(() => {document.getElementById("title").innerHTML = "MOVEMENT DETECTED";document.getElementById("heading").innerHTML = "MOVEMENT DETECTED";}, 500);
-            alarm.i = setInterval(() => {document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";setTimeout(() => {document.getElementById("title").innerHTML = "MOVEMENT DETECTED";document.getElementById("heading").innerHTML = "MOVEMENT DETECTED";}, 500);}, 1000);
+            alarm.i = setInterval(() => {document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";alarm.t = setTimeout(() => {document.getElementById("title").innerHTML = "MOVEMENT DETECTED";document.getElementById("heading").innerHTML = "MOVEMENT DETECTED";}, 500);}, 1000);
           } else {
-            document.getElementById("title").innerHTML = "Cool RaVE Games";
-            document.getElementById("heading").innerHTML = "Cool RaVE Games";
+            if (data.distance > 5) {
+              document.getElementById("title").innerHTML = "Slow Cold Movement Detected";
+              document.getElementById("heading").innerHTML = "Slow Cold Movement Detected";
+            } else if (data.ColdMovement) {
+              document.getElementById("title").innerHTML = "Fast Cold Movement Detected";
+              document.getElementById("heading").innerHTML = "Fast Cold Movement Detected";
+            } else { 
+              document.getElementById("title").innerHTML = "Cool RaVE Games";
+              document.getElementById("heading").innerHTML = "Cool RaVE Games";
+              document.getElementById('stealing').src = "";
+            }
           }
           // } catch (error) {
           //   document.getElementById("title").innerHTML = "ESP32 Disconnected";
@@ -183,6 +211,8 @@
       // }
       fetch(`/data`).then((response) => response.json()).then((response) => {
         data = response.variables;
+        document.getElementById("movement").innerHTML = data.movement;
+        document.getElementById("ColdMovement").innerHTML = data.ColdMovement;
         // console.log(data.movement);
         // await fetch("../").then((response) => response.json()).then((response) => {data = response.variables;});
         document.getElementById('BuzzerStatus').innerHTML = `${(data.BuzzerStatus) ? 'A' : 'Ina'}ctive`;
@@ -196,18 +226,26 @@
         document.getElementById('Green2Brightness').disabled = data.RGB2Auto;
         document.getElementById('Blue2Brightness').disabled = data.RGB2Auto;
         // document.getElementById('InbuiltBrightness').value = data.InbuiltBrightness;
+        
         document.getElementById('VAActive').innerHTML = `${((data.VAAuto && data.movement) || (!data.VAAuto && data.VAActive)) ? 'A' : 'Ina'}ctive`;
         document.getElementById('VAActive').disabled = data.VAAuto;
         clearTimeout(alarm.t);
         clearInterval(alarm.i);
         if (data.movement) {
+          // document.getElementById("movement").innerHTML = "true";
           document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
           document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
           alarm.t = setTimeout(() => {document.getElementById("title").innerHTML = "MOVEMENT DETECTED";document.getElementById("heading").innerHTML = "MOVEMENT DETECTED";}, 500);
-          alarm.i = setInterval(() => {document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";setTimeout(() => {document.getElementById("title").innerHTML = "MOVEMENT DETECTED";document.getElementById("heading").innerHTML = "MOVEMENT DETECTED";}, 500);}, 1000);
+          alarm.i = setInterval(() => {document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";alarm.t = setTimeout(() => {document.getElementById("title").innerHTML = "MOVEMENT DETECTED";document.getElementById("heading").innerHTML = "MOVEMENT DETECTED";}, 500);}, 1000);
         } else {
-          document.getElementById("title").innerHTML = "Cool RaVE Games";
-          document.getElementById("heading").innerHTML = "Cool RaVE Games";
+          if (data.ColdMovement) {
+            document.getElementById("title").innerHTML = "Fast Cold Movement Detected";
+            document.getElementById("heading").innerHTML = "Fast Cold Movement Detected";
+          } else {
+            // document.getElementById("movement").innerHTML = "false";
+            document.getElementById("title").innerHTML = "Cool RaVE Games";
+            document.getElementById("heading").innerHTML = "Cool RaVE Games";
+          }
         }
         // } catch (error) {
         //   document.getElementById("title").innerHTML = "ESP32 Disconnected";

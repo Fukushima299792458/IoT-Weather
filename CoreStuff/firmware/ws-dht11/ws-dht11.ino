@@ -16,6 +16,8 @@
 
 // DHT11 sensor pins
 #define Movement 17
+#define Trigger 13
+#define Echo 12
 
 // #define DHTTYPE DHT11
 #define Alarm1 21
@@ -69,7 +71,13 @@ bool VAActive = false;
 
 int AlarmPitch = 50;
 
-bool BoolData;
+// long times[10000];
+float timeTotal = 0;
+float average = 0;
+int timesIndex = 0;
+bool coldMovement = false;
+
+// bool BoolData;
 // String Data = "{\"movement\":"+(String)movement+",\"InbuiltAuto\":"+(String)InbuiltAuto+",\"InbuiltBrightness\":"+(String)analogRead(Inbuilt)+",\"RGB1Auto\":"+(String)RGB1Auto+",\"Red1Brightness\":"+(String)analogRead(RGB1[0])+",\"Green1Brightness\":"+(String)analogRead(RGB1[1])+",\"Blue1Brightness\":"+(String)analogRead(RGB1[2])+",\"RGB2Auto\":"+(String)RGB2Auto+",\"Red2Brightness\":"+(String)analogRead(RGB2[0])+",\"Green2Brightness\":"+(String)analogRead(RGB2[1])+",\"Blue2Brightness\":"+(String)analogRead(RGB2[2])+"}";
 
 // float humidity;
@@ -95,18 +103,24 @@ void setup(void)
     pinMode(RGB1[i], OUTPUT);
     pinMode(RGB2[i], OUTPUT);
   }
-  setRGB(0, 0, 255, RGB1);
-  setRGB(0, 0, 255, RGB2);
+  setRGB(0, 255, 0, RGB1);
+  setRGB(0, 255, 0, RGB2);
   // Start Serial
   Serial.begin(2000000);
 
   pinMode(Movement, INPUT);
-  
+  pinMode(Trigger, OUTPUT);
+  pinMode(Echo, INPUT);
   // Init DHT 
   // dht.begin();
   
   // Init variables and expose them to REST API
   rest.variable("movement",&movement);
+  rest.variable("Average",&average);
+  // rest.variable("Time",&timeTotal);
+  rest.variable("ColdMovement",&coldMovement);
+
+
   rest.variable("BuzzerStatus",&BuzzerAuto);
   rest.variable("BuzzerStatus",&BuzzerStatus);
   // rest.variable("VAActive",&VAActive);
@@ -156,9 +170,45 @@ void setup(void)
   
   // Print the IP address
   Serial.println(WiFi.softAPIP());
+  // times[0] = 1;
 }
 
 void loop() {
+  WiFiClient client = server.available();
+  digitalWrite(Trigger, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(Trigger, LOW);
+  float time = pulseIn(Echo, HIGH);
+  timeTotal += time;
+  coldMovement = (average - time > 100) ? true : coldMovement;
+  // Serial.println(time);
+
+  // float time = pulseIn(Echo, HIGH);
+  // Serial.println(times[timesIndex]);
+  // Serial.println(timesIndex);
+  // if (times) {
+  // float lastTimes[timesIndex];
+  // Serial.print("dfgrs");
+  // for (int i = 0; i < timesIndex; i++) {
+  //   lastTimes[i] = times[i];
+  // }
+  // float times[timesIndex];
+  // for (int i = 0; i < timesIndex; i++) {
+  //   times[i] = lastTimes[i];
+  // }
+  // times[0] += 1;
+  // times[0] = ;
+  // Serial.println("times[0]");
+  timesIndex += 1;
+  // Serial.println(times);
+
+  // times[0] += 1;
+
+  // } else {
+  //   float times[] = {time};
+  // }
+  // Serial.println(time/343);
+  // Serial.println(time);
   // int fre = 0;
   // while (fre < 1500) {
   //   tone(Alarm[0], fre);
@@ -167,7 +217,6 @@ void loop() {
   // tone(Alarm[0], 1000);
   // delay(6753454675674);
   // tone(Alarm[0], 1000, 10000);
-  WiFiClient client = server.available();
   if (!movement && digitalRead(Movement)) {
     // Reading temperature and humidity
     movement = digitalRead(Movement);
@@ -175,10 +224,10 @@ void loop() {
       // VAActive = true;
       // Serial.println(VAActive);
       if (RGB1Auto) {
-        setRGB(0, 255, 0, RGB1);
+        setRGB(255, 0, 0, RGB1);
       }
       if (RGB2Auto) {
-        setRGB(255, 255, 255, RGB2);
+        setRGB(255, 0, 0, RGB2);
       }
       if (InbuiltAuto) {
         analogWrite(Inbuilt, 255);
@@ -200,14 +249,27 @@ void loop() {
     if (VAAuto) {
       // VAActive = false;
       // Serial.println(VAActive);
-      if (RGB1Auto) {
-        setRGB(0, 0, 0, RGB1);
-      }
-      if (RGB2Auto) {
-        setRGB(0, 0, 0, RGB2);
-      }
-      if (InbuiltAuto) {
-        analogWrite(Inbuilt, 0);
+      // if moving closer at significant speed
+      if (average - time > 100) {
+        if (RGB1Auto) {
+          setRGB(0, 0, 255, RGB1);
+        }
+        if (RGB2Auto) {
+          setRGB(0, 0, 255, RGB2);
+        }
+        if (InbuiltAuto) {
+          analogWrite(Inbuilt, 0);
+        }
+      } else {
+        if (RGB1Auto) {
+          setRGB(0, 0, 0, RGB1);
+        }
+        if (RGB2Auto) {
+          setRGB(0, 0, 0, RGB2);
+        }
+        if (InbuiltAuto) {
+          analogWrite(Inbuilt, 0);
+        }
       }
       if (BuzzerAuto) {
         for (int i = 0; i < 3; i++) {
@@ -218,10 +280,10 @@ void loop() {
   }
   if (VAActive && !VAAuto) {
     if (RGB1Auto) {
-      setRGB(0, 255, 0, RGB1);
+      setRGB(255, 0, 0, RGB1);
     }
     if (RGB2Auto) {
-      setRGB(255, 255, 255, RGB2);
+      setRGB(255, 0, 0, RGB2);
     }
     if (InbuiltAuto) {
       analogWrite(Inbuilt, 255);
@@ -314,8 +376,28 @@ void loop() {
   // rest.set_name((String)Red2Brightness + "G" + (String)Green2Brightness + "B" + (String)Blue2Brightness + "\"InbuiltBrightness\":" + (String)InbuiltBrightness);
   // Data = "{\"movement\":"+(String)movement+",\"InbuiltAuto\":"+(String)InbuiltAuto+",\"InbuiltBrightness\":"+(String)analogRead(Inbuilt)+",\"RGB1Auto\":"+(String)RGB1Auto+",\"Red1Brightness\":"+(String)analogRead(RGB1[0])+",\"Green1Brightness\":"+(String)analogRead(RGB1[1])+",\"Blue1Brightness\":"+(String)analogRead(RGB1[2])+",\"RGB2Auto\":"+(String)RGB2Auto+",\"Red2Brightness\":"+(String)analogRead(RGB2[0])+",\"Green2Brightness\":"+(String)analogRead(RGB2[1])+",\"Blue2Brightness\":"+(String)analogRead(RGB2[2])+"}";
   // InbuiltBrightness = analogRead(Inbuilt);
+  // long total = 0;
+  // for (int i = 0; i < timesIndex; i++) {
+  //   total += times[i];
+  // }
+  average = timeTotal/timesIndex;
+  Serial.println(average);
+  // Serial.println(total/timesIndex);
+  // Serial.println(timesIndex);
+  // float sum = 0;
+  // for (int i = 0; i < timesIndex; i++) {
+  //   sum += (times[i] - average)*(times[i] - average);
+  // }
+  // Serial.println(sum);
+  // Serial.println(sum/timesIndex);
+  // SD = sqrt(sum/timesIndex);
+  // Serial.println(SD);
+  // float average/
   rest.handle(client);
   movement = false;
+  timeTotal = 0;
+  timesIndex = 0;
+  coldMovement = false;
   // return;
   // analogWrite(Inbuilt, InbuiltBrightness);
   // if (!InbuiltAuto) {
@@ -334,43 +416,47 @@ void setRGB(int R, int G, int B, int light[]) {
   analogWrite(light[2], B);
 }
 
-void seen() {
-  setRGB(255, 0, 0, RGB1);
-  setRGB(255, 0, 0, RGB2);
-  analogWrite(Inbuilt, 255);
-  delay(400);
-  for (int i = 0; i < 255; i++) {
-    delay(5);
-    setRGB(255, 0, i, RGB1);
-  }
-  for (int i = 0; i < 255; i++) {
-    delay(5);
-    setRGB(255, 0, i, RGB2);
-  }
-  for (int i = 0; i < 255; i++) {
-    delay(5);
-    setRGB(255, i, 255, RGB1);
-  }
-  for (int i = 0; i < 255; i++) {
-    delay(5);
-    setRGB(255, i, 255, RGB2);
-  }
-  // Prints the temperature in celsius
-  delay(500);
-  for (int i = 0; i < 255; i++) {
-    delay(5);
-    setRGB(255, 255, 255 - i, RGB1);
-  }
-  for (int i = 0; i < 255; i++) {
-    delay(5);
-    setRGB(255 - i, 255, 0, RGB1);
-  }
-  delay(500);
-  setRGB(0, 255, 0, RGB1);
-}
+// void seen() {
+//   setRGB(255, 0, 0, RGB1);
+//   setRGB(255, 0, 0, RGB2);
+//   analogWrite(Inbuilt, 255);
+//   delay(400);
+//   for (int i = 0; i < 255; i++) {
+//     delay(5);
+//     setRGB(255, 0, i, RGB1);
+//   }
+//   for (int i = 0; i < 255; i++) {
+//     delay(5);
+//     setRGB(255, 0, i, RGB2);
+//   }
+//   for (int i = 0; i < 255; i++) {
+//     delay(5);
+//     setRGB(255, i, 255, RGB1);
+//   }
+//   for (int i = 0; i < 255; i++) {
+//     delay(5);
+//     setRGB(255, i, 255, RGB2);
+//   }
+//   // Prints the temperature in celsius
+//   delay(500);
+//   for (int i = 0; i < 255; i++) {
+//     delay(5);
+//     setRGB(255, 255, 255 - i, RGB1);
+//   }
+//   for (int i = 0; i < 255; i++) {
+//     delay(5);
+//     setRGB(255 - i, 255, 0, RGB1);
+//   }
+//   delay(500);
+//   setRGB(0, 255, 0, RGB1);
+// }
 
 int update(String update) {
-  bool s = movement;
+  bool m = movement;
+  int t = timesIndex;
+  // float a = average;
+  float tt = timeTotal;
+  bool cm = coldMovement;
   Serial.println(update);
   BuzzerAuto = ((update.indexOf("\"BuzzerAuto\":true") >= 0) ? true : ((update.indexOf("\"BuzzerAuto\":false") >= 0) ? false : NULL));
   // BuzzerStatus = ((update.indexOf("\"BuzzerStatus\":true") >= 0) ? true : ((update.indexOf("\"BuzzerStatus\":false") >= 0) ? false : NULL));
@@ -437,6 +523,10 @@ int update(String update) {
       }
     }
   }
-  movement = s;
+  movement = m;
+  timesIndex = t;
+  // average = a;
+  timeTotal = tt;
+  coldMovement = cm;
   return 0;
 }

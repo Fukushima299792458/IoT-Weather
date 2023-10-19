@@ -57,7 +57,7 @@ router.use('/', async(req, res) => {
     if (req.url != '/') {
         res.sendFile('/Documents/Phoenix/School/IT/IoT-Weather/' + req.url);
     } else {
-        res.sendFile('/Documents/Phoenix/School/IT/IoT-Weather/CoreStuff/nav.html');
+        res.sendFile('/Documents/Phoenix/School/IT/IoT-Weather/CoreStuff/nav.ejs');
     }
     // res.send(await (await fetch('http://192.168.4.1')).json());
 })
