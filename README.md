@@ -62,4 +62,5 @@ Date | Commit Message | Version
 
 - [Web Page Layouts](https://www.youtube.com/watch?v=3C_22eBWpjg)
 - [JS Native Fetch](https://www.youtube.com/watch?v=MBqS1kYzwTc)
+- [Square Root in c++](https://www.scaler.com/topics/sqrt-in-cpp/)
 
