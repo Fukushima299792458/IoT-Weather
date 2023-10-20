@@ -2,17 +2,26 @@
 This is a Wireless motion-triggered alarm that uses a node.js webserver to serve the webpage with information from an ESP32 and its various sensors. The outputs of the ESP32 can also be controlled with the webpage. 
 ## ESP32 Hardware
 ![IMG_4801](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/8d4f013f-bea6-4465-b910-f30d38808d28)
+# The Button!  
+The Button in the above image serves only the purpose of appearing functional and inducing an involuntary press by any trespassers unlucky enough to meet its gaze and bringing them necessarily within the detection radius.
+A number of studies and social experiments investigate the effectiveness of this method below and also serve as examples of how interested we are as a species in buttons. Undeniably this bait works often enough to make a noticeable difference to this device's effectiveness without the button itself needing to be a sensor input.
+- [Love Buttons](https://techcrunch.com/2018/03/20/researchers-find-the-best-way-to-press-a-button/)
+- [The Great Button!](https://www.vox.com/2015/4/10/8383165/reddit-button-explained)
+- [Buttons](https://www.talkbass.com/threads/the-psychology-of-button-pushing-and-effective-responses-to-it.1319409/#:~:text=My%20opinion%20on%20this%20is,does%20the%20same%20to%20them.) 
+
 
 ## Sensors
 ### IR Motion Sensor
 The Infrared motion sensor detects motion by detecting a change in the infrared signature of its detection field i.e. it sees warm objects using IR and then detects when they change position.  
 ![IMG_4801a](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/a8ae80d4-ae6d-4876-ac03-aa26b792de73)
-(White dome, with the three power pins facing you (opposite of above image) and the white dome facing upwards, the leftmost pin is to be `gnd`, the middle is your data pin (attached to `D17` in the example. `digitalRead(17)` returning `true` or `false` if there is or is not movement respectively), and the rightmost pin is to be `Vin` (5v))
+(White dome in the above image, with the three power pins facing you (opposite of above image) and the white dome facing upwards, the leftmost pin is to be `gnd`, the middle is your data pin (attached to `17` in the example. `digitalRead(17)` returning `true` or `false` if there is or is not movement respectively), and the rightmost pin is to be `Vin` (5v))
 
 
 
 ### Ultrasonic Sensor
-The Ultrasonic distance sensor sends out a 10µs pulse (from the `trig` pin) and measures the time the pulse takes to bounce back (to the `echo` pin). Using the speed of sound and the time (in ten-thousandths of a second as far as I can tell) the sound travelled we can calculate the distance travelled for the round trip and divide by two to get the approximate distance to the object.  
+The Ultrasonic distance sensor sends out a 10µs pulse (from the `trig` pin (output pin `13` in the example)) and measures the time the pulse takes to bounce back (to the `echo` pin (input pin `12` in the example)). Using the speed of sound and the time (in ten-thousandths of a second as far as I can tell) the sound travelled we can calculate the distance travelled for the round trip and divide by two to get the approximate distance to the object.  
+The pin labelled `trig` triggers the ultrasonic pulse (output pin `13` in the example), the `echo` pin receives the return pulse (input pin `12` in the example), and the `Vin` and `gnd` pins need to be plugged into the `Vin`(5v) pin and `gnd` pins respectively.  
+  
 ### Average Distance Change
 Every ten seconds the webpage requests an update and compares the new average to the old average distance. If the change in average distance is more than 5cm and there is no faster or warmer movement detected by the other functions then it changes the title and heading of the page to "Slow Movement Detected".  
   
@@ -29,8 +38,9 @@ Sensors display sensor data every 10 seconds as specified in the [sensors](https
 Transducers can be set to automatically change with the Virtual Alarm which can be in turn set to automatically change according to the sensor inputs. Alternatively, they can be controlled manually as in the [Transducers](https://github.com/Fukushima299792458/IoT-Weather/edit/main/README.md#transducers) section. 
 
 ## Transducers
-
-
+All transducers or outputs can be set to automatic to be controlled by the Virtual alarm function or manually controlled individually including the virtual alarm which can be automatically triggered by the sensor inputs or manually. 
+### Buzzer(s)
+When activated automatically the buzzers produce a loud sound slowly rising in pitch up to 5kHz before dropping back down to the starting value of 50Hz.  
 
 ## an IoT project
 
