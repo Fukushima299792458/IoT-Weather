@@ -20,12 +20,7 @@ app.use(express.json({ limit: '10mb' }));
 const indexRouter = require('./routes/index');
 
 app.use('/', indexRouter);
-// app.use('/server.ejs', indexRouter);
 
 app.listen(process.env.PORT || port, () => {
     console.log('Web App ready at http://localhost:' + port + '/server.ejs');
 })
-
-// app.get('/', (req, res) => {
-//     res.send('Hello World');
-// })

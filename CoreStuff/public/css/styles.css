@@ -26,11 +26,6 @@ ul {
   list-style-type: none;
 }
 
-/* .grid-container {
-  display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
-  column-gap: 30px;
-} */
 h1 {
   margin-top: 2%;
   text-align: center;
@@ -47,13 +42,10 @@ nav li {
 article {
   padding: 30px;
 }
-/* article h2 { */
-  /* font-size: 3.5em; */
-  /* max-width: 800px; */
-/* } */
+
 article img {
-  width: 100%;
-  height: 20px;
+  width: 1000px;
+  height: 200px;
 }
 article p {
   margin-top: 30px;
@@ -61,7 +53,6 @@ article p {
   color: #777;
 }
 aside {
-  /* padding: 30px; */
   border-bottom: 1px solid #ddd;
 }
 footer {

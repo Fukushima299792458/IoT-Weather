@@ -9,11 +9,6 @@
   <body>
     <div class="grid-container">
       <h1 id="heading">Not Connected to ESP32</h1>
-      <!-- <nav>
-        <p>Categories</p>
-        <li><a href="https://weather.com/en-AU/weather/today/l/ASXX0023:1:AS?Goto=Redirected">Weather</a></li>
-        <li><a href="#">Data</a></li>
-      </nav> -->
       <aside>
         <table>
           <tr>
@@ -37,7 +32,7 @@
             <td>Input Only</td>
           </tr>
           <tr>
-            <th>Transducer</th>
+            <th>Outputs</th>
             <th>Status</th>
             <th>Mode</th>
           </tr>
@@ -65,7 +60,6 @@
           </tr>
           <tr>
             <td>RGB2</td>
-            <!-- <td>Unknown: Automatic</td> -->
             <td>
               <ul>
                 <li>R: <input type="range" min="0" max="255" value="0" disabled onchange="data.Red2Brightness = parseInt(this.value); update();" id="Red2Brightness" /></li>
@@ -78,13 +72,11 @@
           <tr>
             <th><em><u>Virtual Alarm</u></em></th>
             <td><button disabled id="VAActive" onclick="data.VAActive = !data.VAActive; update();">Inactive</button></td>
-            <!-- <th><button onclick="if (data.VAAuto == 'Auto') {data.VAAuto = 'Manual';} else {data.VAAuto = 'Auto';}this.innerHTML = data.VAAuto; update();"><%= variables.VAAuto %></button></th> -->
             <th><button onclick="data.VAAuto = !data.VAAuto; if (data.VAAuto) {this.innerHTML = 'Auto';} else {this.innerHTML = 'Manual';} update();">Auto</button></th>
           </tr>
         </table>
       </aside>
       <article>
-        <!-- <h2>The Best IoT Weather App</h2> -->
         <img src="/CoreStuff/public/assets/stealing.jpg" id="stealing" loading="lazy" />
       </article>
       <footer>
@@ -94,7 +86,6 @@
     <script>
       let data;
       let alarm = {t: null, i: null, u: null};
-      // let called = 0;
       function update(get) {
         if (!get) {
           fetch(`/status?update=${JSON.stringify(data)}`);
@@ -108,19 +99,10 @@
           document.getElementById('Red2Brightness').disabled = data.RGB2Auto;
           document.getElementById('Green2Brightness').disabled = data.RGB2Auto;
           document.getElementById('Blue2Brightness').disabled = data.RGB2Auto;
-          // document.getElementById('InbuiltBrightness').value = data.InbuiltBrightness;
           document.getElementById('VAActive').innerHTML = `${((data.VAAuto && data.movement) || (!data.VAAuto && data.VAActive)) ? 'A' : 'Ina'}ctive`;
           document.getElementById('VAActive').disabled = data.VAAuto;
           return;
         }
-        
-        // called += 1;
-        // if (called >= 1) {
-        //   return;
-        // }
-        // try {
-        clearTimeout(alarm.t);
-        clearInterval(alarm.i);
         fetch(`/data`).then((response) => response.json()).then((response) => {
           data.movement = response.variables.movement;
           data.distance = Math.abs(data.time - response.variables.Average)*0.01715;
@@ -130,8 +112,6 @@
           document.getElementById("movement").innerHTML = data.movement;
           document.getElementById("distance").innerHTML = data.distance + " cm";
           document.getElementById("ColdMovement").innerHTML = data.ColdMovement;
-          // console.log(data.movement);
-          // await fetch("../").then((response) => response.json()).then((response) => {data = response.variables;});
           document.getElementById('BuzzerStatus').innerHTML = `${(data.BuzzerStatus) ? 'A' : 'Ina'}ctive`;
           document.getElementById('BuzzerStatus').disabled = data.BuzzerAuto;
           document.getElementById('Buzzer').disabled = (data.BuzzerAuto || !data.BuzzerStatus);
@@ -142,10 +122,11 @@
           document.getElementById('Red2Brightness').disabled = data.RGB2Auto;
           document.getElementById('Green2Brightness').disabled = data.RGB2Auto;
           document.getElementById('Blue2Brightness').disabled = data.RGB2Auto;
-          // document.getElementById('InbuiltBrightness').value = data.InbuiltBrightness;
           document.getElementById('VAActive').innerHTML = `${((data.VAAuto && data.movement) || (!data.VAAuto && data.VAActive)) ? 'A' : 'Ina'}ctive`;
           document.getElementById('VAActive').disabled = data.VAAuto;
           document.getElementById('stealing').src = "/CoreStuff/public/assets/stealing.jpg";
+          clearTimeout(alarm.t);
+          clearInterval(alarm.i);
           if (data.movement) {
             document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
             document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
@@ -164,57 +145,13 @@
               document.getElementById('stealing').src = "";
             }
           }
-          // } catch (error) {
-          //   document.getElementById("title").innerHTML = "ESP32 Disconnected";
-          //   document.getElementById("heading").innerHTML = "ESP32 Disconnected";
-          // }
-          // if (called > 1) {
-          //   called = 0;
-          //   update();
-          //   return;
-          // }
-          // called = 0;
-          // clearTimeout(alarm.u);
-          // setIimeout(update, 10000, true);
           setTimeout(update, 10000, true);
         });
       }
-      // try {
-        // fetch("../data").then((response) => response.json()).then((response) => {
-        //   data = response.variables;
-        //   data.Buzzer = parseInt(document.getElementById('Buzzer').value);
-        //   data.InbuiltBrightness = parseInt(document.getElementById('InbuiltBrightness').value);
-        //   data.Red1Brightness = parseInt(document.getElementById('Red1Brightness').value);
-        //   data.Green1Brightness = parseInt(document.getElementById('Green1Brightness').value);
-        //   data.Blue1Brightness = parseInt(document.getElementById('Blue1Brightness').value);
-        //   data.Red2Brightness = parseInt(document.getElementById('Red2Brightness').value);
-        //   data.Green2Brightness = parseInt(document.getElementById('Green2Brightness').value);
-        //   data.Blue2Brightness = parseInt(document.getElementById('Blue2Brightness').value);
-          // update(true);
-        //   if (response.variables.movement) {
-        //     document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
-        //     document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
-        //     alarm.t = setTimeout(() => {document.getElementById("title").innerHTML = "MOVEMENT DETECTED";document.getElementById("heading").innerHTML = "MOVEMENT DETECTED";}, 500);
-        //     alarm.i = setInterval(() => {document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";setTimeout(() => {document.getElementById("title").innerHTML = "MOVEMENT DETECTED";document.getElementById("heading").innerHTML = "MOVEMENT DETECTED";}, 500);}, 1000);
-        //   }
-        // });
-      // } catch (error) {
-      //   data.Buzzer = parseInt(document.getElementById('Buzzer').value);
-      //   data.InbuiltBrightness = parseInt(document.getElementById('InbuiltBrightness').value);
-      //   data.Red1Brightness = parseInt(document.getElementById('Red1Brightness').value);
-      //   data.Green1Brightness = parseInt(document.getElementById('Green1Brightness').value);
-      //   data.Blue1Brightness = parseInt(document.getElementById('Blue1Brightness').value);
-      //   data.Red2Brightness = parseInt(document.getElementById('Red2Brightness').value);
-      //   data.Green2Brightness = parseInt(document.getElementById('Green2Brightness').value);
-      //   data.Blue2Brightness = parseInt(document.getElementById('Blue2Brightness').value);
-      //   update();
-      // }
       fetch(`/data`).then((response) => response.json()).then((response) => {
         data = response.variables;
         document.getElementById("movement").innerHTML = data.movement;
         document.getElementById("ColdMovement").innerHTML = data.ColdMovement;
-        // console.log(data.movement);
-        // await fetch("../").then((response) => response.json()).then((response) => {data = response.variables;});
         document.getElementById('BuzzerStatus').innerHTML = `${(data.BuzzerStatus) ? 'A' : 'Ina'}ctive`;
         document.getElementById('BuzzerStatus').disabled = data.BuzzerAuto;
         document.getElementById('Buzzer').disabled = (data.BuzzerAuto || !data.BuzzerStatus);
@@ -224,15 +161,12 @@
         document.getElementById('Blue1Brightness').disabled = data.RGB1Auto;
         document.getElementById('Red2Brightness').disabled = data.RGB2Auto;
         document.getElementById('Green2Brightness').disabled = data.RGB2Auto;
-        document.getElementById('Blue2Brightness').disabled = data.RGB2Auto;
-        // document.getElementById('InbuiltBrightness').value = data.InbuiltBrightness;
-        
+        document.getElementById('Blue2Brightness').disabled = data.RGB2Auto;        
         document.getElementById('VAActive').innerHTML = `${((data.VAAuto && data.movement) || (!data.VAAuto && data.VAActive)) ? 'A' : 'Ina'}ctive`;
         document.getElementById('VAActive').disabled = data.VAAuto;
         clearTimeout(alarm.t);
         clearInterval(alarm.i);
         if (data.movement) {
-          // document.getElementById("movement").innerHTML = "true";
           document.getElementById("title").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
           document.getElementById("heading").innerHTML = " ! ! ! MOVEMENT DETECTED ! ! ! ";
           alarm.t = setTimeout(() => {document.getElementById("title").innerHTML = "MOVEMENT DETECTED";document.getElementById("heading").innerHTML = "MOVEMENT DETECTED";}, 500);
@@ -242,23 +176,10 @@
             document.getElementById("title").innerHTML = "Fast Cold Movement Detected";
             document.getElementById("heading").innerHTML = "Fast Cold Movement Detected";
           } else {
-            // document.getElementById("movement").innerHTML = "false";
             document.getElementById("title").innerHTML = "Cool RaVE Games";
             document.getElementById("heading").innerHTML = "Cool RaVE Games";
           }
         }
-        // } catch (error) {
-        //   document.getElementById("title").innerHTML = "ESP32 Disconnected";
-        //   document.getElementById("heading").innerHTML = "ESP32 Disconnected";
-        // }
-        // if (called > 1) {
-        //   called = 0;
-        //   update();
-        //   return;
-        // }
-        // called = 0;
-        // clearTimeout(alarm.u);
-        // setIimeout(update, 10000, true);
         data.Buzzer = parseInt(document.getElementById('Buzzer').value);
         data.InbuiltBrightness = parseInt(document.getElementById('InbuiltBrightness').value);
         data.Red1Brightness = parseInt(document.getElementById('Red1Brightness').value);
