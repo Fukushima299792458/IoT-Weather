@@ -12,7 +12,8 @@ Transducers can be set to automatically change with the Virtual Alarm which can 
 ## Sensors
 ### IR Motion Sensor
 The Infrared motion sensor detects motion by detecting a change in the infrared signature of its detection field i.e. it sees warm objects using IR and then detects when they change position.
-(White dome)
+![IMG_4801a](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/a8ae80d4-ae6d-4876-ac03-aa26b792de73)
+(White dome, with the three power pins facing you (opposite of above image) and the white dome facing upwards, the leftmost pin is to be `gnd`, the middle is your data pin (attached to `D17` in example. `digitalRead(17)` returning `true` or `false` if there is or is not movement respectively), and the rightmost pin is to be `Vin` (5v))
 
 ### UltraSonic Sensor
 The Ultrasonic distance sensor sends out a pulse
