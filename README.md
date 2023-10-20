@@ -1,5 +1,5 @@
 # Wireless Security Alarm
-This is a Wireless motion-triggered alarm that uses a node.js webserver to serve the webpage with information from an ESP32 and its various sensors. The outputs of the ESP32 can also be controlled with the webpage. 
+This is a Wireless motion-triggered alarm that uses a node.js webserver to serve the webpage with information from an ESP32 and its various sensors. The outputs of the ESP32 can also be controlled with the webpage. This page will focus on how to use the system as those who wish to make modifications can largely see the outputs and read the code to get an in-depth understanding that is outside the scope of this page. 
 ## ESP32 Hardware
 ![IMG_4801](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/8d4f013f-bea6-4465-b910-f30d38808d28)
 # The Button!  
@@ -35,12 +35,29 @@ Note: 1 microsecond equivalent to 0.343 mm of sound travel time! That's 343 µm!
 ## UI
 ![image](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/7fd9b3ad-588a-45cd-a63b-b281a4c887b7)
 Sensors display sensor data every 10 seconds as specified in the [sensors](https://github.com/Fukushima299792458/IoT-Weather/edit/main/README.md#sensors) section
-Transducers can be set to automatically change with the Virtual Alarm which can be in turn set to automatically change according to the sensor inputs. Alternatively, they can be controlled manually as in the [Transducers](https://github.com/Fukushima299792458/IoT-Weather/edit/main/README.md#transducers) section. 
+outputs can be set to automatically change with the Virtual Alarm which can be in turn set to automatically change according to the sensor inputs. Alternatively, they can be controlled manually as in the [outputs](https://github.com/Fukushima299792458/IoT-Weather/edit/main/README.md#outputs) section. 
 
-## Transducers
-All transducers or outputs can be set to automatic to be controlled by the Virtual alarm function or manually controlled individually including the virtual alarm which can be automatically triggered by the sensor inputs or manually. 
+## outputs
+All outputs or outputs can be set to automatic to be controlled by the Virtual alarm function or manually controlled individually including the virtual alarm which can be automatically triggered by the sensor inputs or manually. 
+
 ### Buzzer(s)
-When activated automatically the buzzers produce a loud sound slowly rising in pitch up to 5kHz before dropping back down to the starting value of 50Hz.  
+When activated automatically the buzzers produce a loud sound slowly rising in pitch up to 5kHz before dropping back down to the starting value of 50Hz. When activated manually the pitch of all three buzzers can be controlled.  
+![image](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/2a1c2ed6-2c51-4141-b9e7-1fe3f17d24ba)  
+The buzzer _module_ (above) needs the `Vin` pin to be attached to `Vin` (5v), the `gnd` pin attached to `gnd`, and the `i/o` pin is connected to pin `22`.
+The buzzers need their negative (or not positive) pin to be connected to `gnd` with their positive pins connected to the control pins (pins `22` and `23` in the example).
+
+### LEDs
+#### Inbuilt LED
+This LED is automatically set to max brightness when the Virtual alarm is activatedThe inbuilt LED is built into the circuit board and therefore requires no wiring. The blue LED is controlled with pin `2` so pin `2` shouldn't be used for any other component that you want to run independently.  
+  
+#### RGB LEDs 1 and 2
+These LEDs are similar to the inbuilt LED, but RGB. They turn green on startup, and automatically respond to the Virtual alarm by becoming red, and when the virtual alarm is inactive but fast-cold movement is detected they turn blue.  
+![RGB1](https://github.com/Fukushima299792458/IoT-Weather/assets/132644178/47aaa4de-4409-497e-836f-81712e34a56f)  
+With the longest pin on the LEDs closest to your left (as above), the pins are Red (pins `32` and `33` for RGB1 and RGB2 respectively in the example), Ground (the longest pin)(needs to be connected to `gnd`), Green (pins `15` and `25` for RGB1 and RGB2 respectively in the example), and Blue (pins `4` and `26` for RGB1 and RGB2 respectively in the example).
+
+### Virtual alarm
+The virtual alarm is not a real alarm but a collection of functions that trigger the automatic alarm outputs. It can be triggered by sensors or be triggered manually. 
+
 
 ## an IoT project
 
