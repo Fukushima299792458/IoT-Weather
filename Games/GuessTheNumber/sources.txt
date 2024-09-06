@@ -1,0 +1,10 @@
+https://www.tabnine.com/academy/javascript/get-value-of-input/
+https://www.w3schools.com/jsref/prop_text_disabled.asp
+https://www.w3schools.com/jsref/jsref_length_array.asp
+https://www.w3schools.com/howto/howto_css_dropdown.asp
+https://sebhastian.com/javascript-square/#:~:text=By%20using%20the%20Math.,2%20as%20your%20exponent%20parameter.&text=And%20that's%20how%20you%20find%20the%20square%20of%20a%20number%20using%20Math.
+https://www.w3schools.com/jsref/prop_text_value.asp
+https://www.w3schools.com/jsref/met_html_focus.asp
+https://www.w3schools.com/HOWTO/howto_js_trigger_button_enter.asp
+https://www.codegrepper.com/code-examples/javascript/call+a+function+with+arrow+keys+javascript
+
