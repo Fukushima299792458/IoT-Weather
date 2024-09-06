@@ -22,5 +22,5 @@ const indexRouter = require('./routes/index');
 app.use('/', indexRouter);
 
 app.listen(process.env.PORT || port, () => {
-    console.log('Web App ready at http://localhost:' + port + '/server.ejs');
+    console.log('Web App ready at http://localhost:' + port + '/server.html');
 })

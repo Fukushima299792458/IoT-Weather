@@ -17,7 +17,7 @@ router.use('/', async(req, res) => {
     if (req.url != '/') {
         res.sendFile('/Documents/Phoenix/School/IT/IoT-Weather/' + req.url);
     } else {
-        res.sendFile('/Documents/Phoenix/School/IT/IoT-Weather/CoreStuff/nav.ejs');
+        res.sendFile('/Documents/Phoenix/School/IT/IoT-Weather/CoreStuff/nav.html');
     }
 })
 
